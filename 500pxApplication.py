@@ -1,6 +1,7 @@
 #Importing tensoflow
 import tensorflow as tf
 import time as t
+import numpy as np
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
@@ -83,7 +84,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 sess.run(tf.global_variables_initializer())
 
-for i in range(1000):
+for i in range(10000):
   batch = mnist.train.next_batch(10)
   if i%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={
@@ -109,7 +110,6 @@ batch_tx, batch_ty = mnist.test.next_batch(200)
 twoArray = []
 
 #Finding the 2's
-print(batch_tx)
 for i in range(200):
   for j in range(10):
     if(batch_ty[i][j]==1.0 and j==2):
@@ -117,23 +117,34 @@ for i in range(200):
   if(len(twoArray)==10):
     break
 
-print twoArray
+#Creating new arrays for images and labels
+twoImageArray = np.zeros(shape=(10,784))
+twoLabelArray = np.zeros(shape=(10,10))
+
+#Populating the two labels
+j = 0
+for i in(twoArray):
+  twoLabelArray[j][2] = 1.0
+  print(twoLabelArray[j])
+  j+=1
+
+#Populating the two images
+j = 0
+print("Image format")
+for i in(twoArray):
+  for k in range(784):
+    twoImageArray[j][k] = batch_tx[i][k]
+  print(twoImageArray[j])
+  j+=1
 
 
 
-# for i in range(100):
-#   batch = mnist.test.next_batch(10)
-#   corpre2 =tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
-#   accuracy = tf.reduce_mean(tf.cast(corpre2, tf.float32))
-#   print(accuracy)
 
 
 
+accuracy = accuracy.eval(feed_dict={x: twoImageArray, y_: twoLabelArray, keep_prob: 1.0})
 
-
-# accuracy = accuracy.eval(feed_dict={x: batch_tx, y_:batch_ty, keep_prob: 1.0})
-
-# print("test accuracy",accuracy)
+print("test accuracy",accuracy)
 
 # for i in range(10):
 #   print(mnist.train.labels[0,i])
