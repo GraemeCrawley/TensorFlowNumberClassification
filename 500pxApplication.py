@@ -2,6 +2,7 @@
 import tensorflow as tf
 import time as t
 import numpy as np
+import matplotlib.pyplot as plt
 
 from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
@@ -84,7 +85,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 sess.run(tf.global_variables_initializer())
 
-for i in range(10000):
+for i in range(1000):
   batch = mnist.train.next_batch(10)
   if i%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={
@@ -105,12 +106,19 @@ for i in range(10000):
 #Fix was to add batching and make it batch in 10's
 print("Calculating accuracy")
 
-batch_tx, batch_ty = mnist.test.next_batch(200)
+batchSize = 200
 
+batch_tx, batch_ty = mnist.test.next_batch(batchSize)
+
+print(type(batch_tx))
+print(type(batch_ty))
+
+
+# *** TWO STUFF ***
 twoArray = []
 
 #Finding the 2's
-for i in range(200):
+for i in range(batchSize):
   for j in range(10):
     if(batch_ty[i][j]==1.0 and j==2):
       twoArray.append(i)
@@ -125,26 +133,132 @@ twoLabelArray = np.zeros(shape=(10,10))
 j = 0
 for i in(twoArray):
   twoLabelArray[j][2] = 1.0
-  print(twoLabelArray[j])
+  #print(twoLabelArray[j])
   j+=1
 
 #Populating the two images
 j = 0
-print("Image format")
 for i in(twoArray):
   for k in range(784):
     twoImageArray[j][k] = batch_tx[i][k]
-  print(twoImageArray[j])
+  #print(twoImageArray[j])
   j+=1
 
 
+# *** SIX STUFF ***
+sixArray = []
 
 
+#Finding the 6's
+for i in range(batchSize):
+  for j in range(10):
+    if(batch_ty[i][j]==1.0 and j==6):
+      sixArray.append(i)
+  if(len(sixArray)==10):
+    break
 
 
-accuracy = accuracy.eval(feed_dict={x: twoImageArray, y_: twoLabelArray, keep_prob: 1.0})
+#Creating new arrays for 6 images and labels
+sixImageArray = np.zeros(shape=(10,784))
+sixLabelArray = np.zeros(shape=(10,10))
 
-print("test accuracy",accuracy)
+#Populating the six labels
+j = 0
+for i in(sixArray):
+  sixLabelArray[j][6] = 1.0
+  #print(sixLabelArray[j])
+  j+=1
+
+#Populating the six images
+j = 0
+for i in(sixArray):
+  for k in range(784):
+    sixImageArray[j][k] = batch_tx[i][k]
+  #print(sixImageArray[j])
+  j+=1
+
+# #twoImageTensor = tf.Variable(twoImageArray)
+
+print(type(batch_tx))
+print(type(batch_ty))
+print(type(twoImageArray))
+print(type(twoLabelArray))
+print(type(sixImageArray))
+print(type(sixLabelArray))
+
+
+print("First accuracy Round")
+
+accuracy1 = accuracy.eval(feed_dict={x: twoImageArray, y_: twoLabelArray, keep_prob: 1.0})
+
+print("Two is Two accuracy 1",accuracy1)
+
+
+accuracy2 = accuracy.eval(feed_dict={x: twoImageArray, y_: sixLabelArray, keep_prob: 1.0})
+
+print("Two is Six accuracy 1",accuracy2)
+
+print("Changing pixels...")
+
+z = 0
+r = 0
+w, h = 28, 28
+data = np.zeros((h, w, 3), dtype=np.uint8)
+filterStrength = 0.1
+imageNum = 0
+#newTwoImageArray = np.zeros(shape=(10,784))
+for i in range(10):
+  for k in range(784):
+    currentTwoPixel = twoImageArray[i][k]
+    currentSixPixel = sixImageArray[i][k]
+    delta = currentSixPixel-currentTwoPixel
+    print("Delta:",delta)
+    #print(type(twoImageArray[i][k]))
+    twoImageArray[i][k]+=delta*filterStrength
+
+    # print("Z:",z)
+    # print("R:",r)
+    # print("I:",i)
+    # print("K:",k)
+
+    #Save the resulting image
+    #print(twoImageArray[i][k])
+    data[r][z][0] = twoImageArray[i][k]*255
+    
+    z+=1
+    if(z==28):
+      r+=1
+      z=0
+  plt.imshow(data) 
+  plt.savefig("AdversarialImages/array"+str(imageNum))
+  r=0
+  imageNum+=1
+
+#twoImageTensor.assign(twoImageArray).eval()
+
+#print(type(twoImageTensor))
+
+print(type(batch_tx))
+print(type(batch_ty))
+print(type(twoImageArray))
+print(type(twoLabelArray))
+print(type(sixImageArray))
+print(type(sixLabelArray))
+
+print("Second accuracy round")
+
+accuracy2 = accuracy.eval(feed_dict={x: twoImageArray, y_: twoLabelArray, keep_prob: 1.0})
+
+print("Two is Two accuracy 1",accuracy2)
+
+accuracy4 = accuracy.eval(feed_dict={x: twoImageArray, y_: sixLabelArray, keep_prob: 1.0})
+
+print("Two is Six accuracy 1",accuracy4)
+
+print(type(batch_tx))
+print(type(batch_ty))
+print(type(twoImageArray))
+print(type(twoLabelArray))
 
 # for i in range(10):
 #   print(mnist.train.labels[0,i])
