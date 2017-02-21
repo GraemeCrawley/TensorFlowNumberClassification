@@ -106,12 +106,18 @@ print("Calculating accuracy")
 
 batch_tx, batch_ty = mnist.test.next_batch(200)
 
+twoArray = []
+
 #Finding the 2's
 print(batch_tx)
 for i in range(200):
   for j in range(10):
     if(batch_ty[i][j]==1.0 and j==2):
-      print i
+      twoArray.append(i)
+  if(len(twoArray)==10):
+    break
+
+print twoArray
 
 
 
