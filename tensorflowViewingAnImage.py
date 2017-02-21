@@ -2,12 +2,15 @@
 import numpy as np
 from binascii import hexlify
 
-# w, h = 512, 512
-# data = np.zeros((h, w, 3), dtype=np.uint8)
-# data[256, 256] = [255, 0, 0]
-# img = Image.fromarray(data, 'RGB')
-# img.save('my.png')
-# img.show()
+#Below snippet retrieved from:
+#http://stackoverflow.com/questions/2659312/how-do-i-convert-a-numpy-array-to-and-display-an-image
+
+w, h = 512, 512
+data = np.zeros((h, w, 3), dtype=np.uint8)
+data[256, 256] = [255, 0, 0]
+img = Image.fromarray(data, 'RGB')
+img.save('my.png')
+img.show()
 
 
 
@@ -32,10 +35,5 @@ with open("OnePieceOfData/t10k-images.idx3-ubyte", "rb") as f:
 
 
 
-
-
-
-
-#iterating through the MNIST data
-#mapping pixels to a display
-#visualize MNIST data
+#Thank you to this person for the conversion between bytes and pixel values:
+#http://stackoverflow.com/questions/26441382/how-to-convert-a-hex-string-to-an-integer
