@@ -83,7 +83,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 sess.run(tf.global_variables_initializer())
 
-for i in range(10000):
+for i in range(1000):
   batch = mnist.train.next_batch(10)
   if i%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={
@@ -101,10 +101,33 @@ for i in range(10000):
 #https://github.com/tensorflow/tensorflow/issues/136
 
 
+#Fix was to add batching and make it batch in 10's
 print("Calculating accuracy")
 
-batch_tx, batch_ty = mnist.test.next_batch(10)
+batch_tx, batch_ty = mnist.test.next_batch(200)
 
-accuracy = accuracy.eval(feed_dict={x: batch_tx, y_:batch_ty, keep_prob: 1.0})
+#Finding the 2's
+print(batch_tx)
+for i in range(200):
+  for j in range(10):
+    if(batch_ty[i][j]==1.0 and j==2):
+      print i
 
-print("test accuracy",accuracy)
+
+
+# for i in range(100):
+#   batch = mnist.test.next_batch(10)
+#   corpre2 =tf.equal(tf.argmax(y_conv,1),tf.argmax(y_,1))
+#   accuracy = tf.reduce_mean(tf.cast(corpre2, tf.float32))
+#   print(accuracy)
+
+
+
+
+
+# accuracy = accuracy.eval(feed_dict={x: batch_tx, y_:batch_ty, keep_prob: 1.0})
+
+# print("test accuracy",accuracy)
+
+# for i in range(10):
+#   print(mnist.train.labels[0,i])
