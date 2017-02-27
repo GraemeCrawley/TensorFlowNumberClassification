@@ -85,7 +85,7 @@ correct_prediction = tf.equal(tf.argmax(y_conv,1), tf.argmax(y_,1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 sess.run(tf.global_variables_initializer())
 
-for i in range(1000):
+for i in range(5000):
   batch = mnist.train.next_batch(10)
   if i%100 == 0:
     train_accuracy = accuracy.eval(feed_dict={
@@ -179,12 +179,12 @@ for i in(sixArray):
 
 # #twoImageTensor = tf.Variable(twoImageArray)
 
-print(type(batch_tx))
-print(type(batch_ty))
-print(type(twoImageArray))
-print(type(twoLabelArray))
-print(type(sixImageArray))
-print(type(sixLabelArray))
+# print(type(batch_tx))
+# print(type(batch_ty))
+# print(type(twoImageArray))
+# print(type(twoLabelArray))
+# print(type(sixImageArray))
+# print(type(sixLabelArray))
 
 
 print("First accuracy Round")
@@ -200,11 +200,17 @@ print("Two is Six accuracy 1",accuracy2)
 
 print("Changing pixels...")
 
+
+
+
+
+
+#Changing pixels algorithm
 z = 0
 r = 0
 w, h = 28, 28
 data = np.zeros((h, w, 3), dtype=np.uint8)
-filterStrength = 0.1
+filterStrength = 0.55555555
 imageNum = 0
 #newTwoImageArray = np.zeros(shape=(10,784))
 for i in range(10):
@@ -212,7 +218,7 @@ for i in range(10):
     currentTwoPixel = twoImageArray[i][k]
     currentSixPixel = sixImageArray[i][k]
     delta = currentSixPixel-currentTwoPixel
-    print("Delta:",delta)
+    #print("Delta:",delta)
     #print(type(twoImageArray[i][k]))
     twoImageArray[i][k]+=delta*filterStrength
 
@@ -237,6 +243,11 @@ for i in range(10):
 #twoImageTensor.assign(twoImageArray).eval()
 
 #print(type(twoImageTensor))
+
+
+
+
+
 
 print(type(batch_tx))
 print(type(batch_ty))
